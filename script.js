@@ -1,3 +1,6 @@
+var generatePasswordButton = document.getElementById("generate");
+var copyToClipBoardButton = document.getElementById("copytoclipboard");
+
 // Special characters 
 var specialCharacter = ["!", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", "\:", "\;", " < ", "=", " > ", " ? ", "@", "[", "\\", "]", " ^ ", "_", "`", "{", "|", "}", "~"];
 
@@ -32,20 +35,35 @@ function getpasswordoptions(){
   console.log("length is: "+ length)
   password = ""
   //run a loop for length anoumt of time  
-  if (length >= 0 && length <=128 ){
+  if (length >= 8 && length <=128 ){
     alert("you Have chosen a password of " + length + " character")
   }
   else {
     alert("characters needs to be Between 8 and 128." );
+    generatePassword()
   }
   var specialCharacter = confirm("would you like to use a special character?")
   console.log(specialCharacter);
   var numberCharacter = confirm("would you like to use a number character?")
   console.log(numberCharacter);
-  var lowerCaseCharacgter = confirm("would you like to use a lowercase character?")
-  console.log(lowerCaseCharacgter);
+  var lowerCaseCharacter = confirm("would you like to use a lowercase character?")
+  console.log(lowerCaseCharacter);
   var upperCaseCharacter = confirm("would you like to use a uppercase character?")
   console.log(upperCaseCharacter);
+
+  if (specialCharacter == false && numberCharacter == false && lowerCaseCharacter ==false && upperCaseCharacter == false){
+    alert("Your password must contain at least one special, numeric, lowercase, or uppercase character")
+    return;
+  }
+  var Options = {
+    length: length,
+    specialCharacter: specialCharacter,
+    numberCharacter: numberCharacter,
+    lowerCaseCharacter: lowerCaseCharacter,
+    upperCaseCharacter: upperCaseCharacter
+  }
+  generatePassword()
+
 }
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
