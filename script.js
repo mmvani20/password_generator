@@ -1,69 +1,147 @@
 var generatePasswordButton = document.getElementById("generate");
 var copyToClipBoardButton = document.getElementById("copytoclipboard");
 
-// Special characters 
-var specialCharacter = ["!", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", "\:", "\;", " < ", "=", " > ", " ? ", "@", "[", "\\", "]", " ^ ", "_", "`", "{", "|", "}", "~"];
+var onlyUpper = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+var onlyLower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+var onlySpecial = ['#','$','%','&','(',')','*','+',',','-','.','/',':',';','<','=','>','?','@','['];
+var onlyNumeric = [0,1,2,3,4,5,6,7,8,9];
 
-// Numeric characters
-var numberCharacter = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-// Alphabetical characters
-var lowerCaseCharacgter = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+function generateOptions() {
 
-var upperCaseCharacter = ["A",   "B",   "C",   "D",  "E",   "F",   "G",   "H",   "I",   "J",   "K",   "L",   "M",   "N",   "O",  "P",   "Q",   "R",   "S",   "T",   "U",   "V",   "W",   "X",   "Y",   "Z"
-]
+    //create variable for user input
+    //var userInput = prompt('How many characters would you like your password to contain?');
 
-// Assignment Code
-var generateBtn = document.querySelector("#generate");
+    //if less than 8 characters
+    //if (userInput <= 8) {
+    //alert('Password must be at least 8 characters');
+    //}
 
-// Write password to the #password input
-function writePassword() {
-  var password = generatePassword();
-  var passwordText = document.querySelector("#password");
+    //if more than 128 characters
+    //if (userInput >= 128) {
+    //alert('Password must be less than 128 characters');
+    //}
 
-  passwordText.value = password;
+    //prompt user for at least 8 characters
+    var length = parseInt(prompt("How many characters would you like your passward to be minmum 8 max 128?"));
+
+    //loop userInput question
+    // for (var i = userInput; userInput < 8 || userInput > 128; userInput = prompt('How many characters would you like your password to contain?')) {
+    //     alert('Password must be at least 8 characters but less than 128 characters');
+    // }
+
+    if (length < 8) {
+        alert('The password must be at least 8 characters!');
+        return;
+    }
+    if (length > 128) {
+        alert('The password must be less than 128 characters!');
+        return;
+    }
+
+    //prompt user for special characters
+    var shouldIncludeSpecialCharacters = confirm("Do you want to include special characters?");
+    
+    //prompt user for numeric characters
+    var shouldIncludeNumeric = confirm("Do you want to include numeric characters?");
+    
+    //prompt user for lowercase characters
+    var shouldIncludeLowercase = confirm("Do you want to include lowercase characters?");
+    
+    //prompt user for uppercase characters
+    var shouldIncludeUppercase = confirm("Do you want to include uppercase characters?");
+    
+    if (!shouldIncludeLowercase && !shouldIncludeUppercase && !shouldIncludeNumeric && !shouldIncludeSpecialCharacters) {
+        alert("Your password must contain at least one special, numeric, lowercase, or uppercase character");
+        return;
+    }
+
+    var questionOptions = {
+        length: length,
+        specialCharacters: shouldIncludeSpecialCharacters,
+        numeric: shouldIncludeNumeric,
+        lowerCase: shouldIncludeLowercase,
+        upperCase: shouldIncludeUppercase
+    }
+
+    return questionOptions;
 
 }
 
-//generate the password
-function generatePassword(){
-  var option = getpasswordoptions();
+function generatePassword() {
+
+    var options = generateOptions();
+    console.log(options)
+
+    var passwordPool = [];
+    console.log(passwordPool)
+
+    if (options.specialCharacters) {
+        for (i = 0; i < onlySpecial.length; ++i) {
+            passwordPool.push(onlySpecial[i]);
+        }
+    } 
+    if (options.numeric) {
+        for (i = 0; i < onlyNumeric.length; ++i) {
+        passwordPool.push(onlyNumeric[i]);
+        }
+    }
+    if (options.lowerCase) {
+        for (i = 0; i < onlyLower.length; ++i) {
+        passwordPool.push(onlyLower[i]);
+        }
+    }
+    if (options.upperCase) {
+        for (i = 0; i < onlyUpper.length; ++i) {
+        passwordPool.push(onlyUpper[i]);
+        }
+    }
+
+    var finalPassword = [];
+
+    for (let i = 0; i < options.length; ++i) {
+        var randomPicker = Math.floor(Math.random() * Math.floor(passwordPool.length));
+         finalPassword.push(passwordPool[randomPicker])
+    }
+
+    console.log(finalPassword)
+
+    var superFinal = finalPassword.join('');
+    console.log(superFinal)
+
+    document.getElementById("generate").textContent = superFinal;
 }
 
-function getpasswordoptions(){
-  var length = parseInt(prompt("How many characters would you like your password? Choose between 8 and 128"))
-  console.log("length is: "+ length)
-  password = ""
-  //run a loop for length anoumt of time  
-  if (length >= 8 && length <=128 ){
-    alert("you Have chosen a password of " + length + " character")
-  }
-  else {
-    alert("characters needs to be Between 8 and 128." );
-    generatePassword()
-  }
-  var specialCharacter = confirm("would you like to use a special character?")
-  console.log(specialCharacter);
-  var numberCharacter = confirm("would you like to use a number character?")
-  console.log(numberCharacter);
-  var lowerCaseCharacter = confirm("would you like to use a lowercase character?")
-  console.log(lowerCaseCharacter);
-  var upperCaseCharacter = confirm("would you like to use a uppercase character?")
-  console.log(upperCaseCharacter);
+    //question array
+    //var questions = [
+    //{ q: 'Do you want to include special characters?', a: true },
+    //{ q: 'Do you want to include numeric characters?', a: true },
+    //{ q: 'Do you want to include lowercase characters?', a: true },
+    //{ q: 'Do you want to include uppercase characters?', a: true },
+    //];
 
-  if (specialCharacter == false && numberCharacter == false && lowerCaseCharacter ==false && upperCaseCharacter == false){
-    alert("Your password must contain at least one special, numeric, lowercase, or uppercase character")
-    return;
-  }
-  var Options = {
-    length: length,
-    specialCharacter: specialCharacter,
-    numberCharacter: numberCharacter,
-    lowerCaseCharacter: lowerCaseCharacter,
-    upperCaseCharacter: upperCaseCharacter
-  }
-  generatePassword()
+    //for (i = 0; i < questions.length; i++);
+    //var answer = confirm(questions[i].q);
+
+    //var allcharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
+
+    var password = "";
+
+    // for (var i = 0; i < userInput; i++) {
+    //     password = password + onlyUpper + onlyLower + onlySpecial + onlyNumeric.charAt(Math.floor(Math.random() * Math.floor(allcharacters.length - 1)));
+    // }
+
+
+
+function copytoClipboard() {
+
+    document.getElementById("generate").select();
+
+    document.execCommand("Copy");
+
+    alert("Your password has now been copied to the clipboard");
 
 }
-// Add event listener to generate button
-generateBtn.addEventListener("click", writePassword);
+
+generatePasswordButton.addEventListener('click', generatePassword);
